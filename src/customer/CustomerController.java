@@ -1,15 +1,21 @@
+package customer;
+
 import java.sql.SQLException;
 
 import java.util.Scanner;
+import kundvagn.Kundvagn;
+import java.util.ArrayList;
 
 public class CustomerController {
+
+    private ArrayList<Kundvagn>  kundvagnProduct= new ArrayList<>();
+    public ArrayList<Kundvagn> getkundvagnProduct() {
+        return kundvagnProduct;
+    }
 
 
     private Integer loggedInCustomerId = null;
     private String loggedInCustomerName = null;
-
-
-
 
     public CustomerController() {
         this.loggedInCustomerId = null;
@@ -19,12 +25,6 @@ public class CustomerController {
         this.loggedInCustomerId = loggedInCustomer.getId();
         this.loggedInCustomerName = loggedInCustomer.getName();
     }
-//    public void logout() {
-//        this.loggedInCustomerId = null;
-//        this.loggedInCustomerName = null;
-//    }
-
-
 
     public Integer getLoggedInCustomerId() {
         return loggedInCustomerId;
@@ -64,7 +64,7 @@ public class CustomerController {
 
                 System.out.println("Ange ett lösenord:");
                 String password = scanner.nextLine();
-
+//isValidInput below in the file
                 if (isValidInput(name, email, phone, address, password)) {
                     try {
                         customerService.insertUser(name, email, phone, address, password);
@@ -80,24 +80,32 @@ public class CustomerController {
                     }
                 }
                 break;
+
             case "2":
                 try {
-                    System.out.println("Ange kund ID för att uppdatera email:");
-                    int customerId = Integer.parseInt(scanner.nextLine().trim());
+                    int customerId = getLoggedInCustomerId();
+
 
                     System.out.println("Ange ny email:");
                     String newEmail = scanner.nextLine().trim();
-                      // isValidEmail function is att  end of the file below
+                    // isValidEmail() below in the file
                     if (!isValidEmail(newEmail)) {
-                        System.out.println(" Ogiltig email. Måste innehålla '@' och '.'");
+                        System.out.println("Ogiltig email. Måste innehålla '@' och '.'");
                         break;
                     }
-//                  updateEmail below here att the end
-                    customerService.updateEmail(customerId, newEmail);
-                } catch (NumberFormatException e) {
-                    System.out.println("  Kunden ID måste vara ett nummer.");
+                    boolean updated = customerService.updateEmail(customerId, newEmail);
+
+                    if (updated) {
+                        System.out.println("E-postadress uppdaterad!");
+                    } else {
+                        System.out.println("Något gick fel. Försök igen.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Fel vid uppdatering: " + e.getMessage());
                 }
                 break;
+
             case "0":
                 System.out.println("Du lämnar kundmenyn.");
                 return;
@@ -105,6 +113,7 @@ public class CustomerController {
 
         }
     }
+    //**************************************************************************************
     public static boolean isValidInput(String name, String email, String phone, String address, String password) {
         boolean isValid = true;
 
@@ -135,6 +144,7 @@ public class CustomerController {
 
         return isValid;
     }
+    //***********************************************************************
     public static boolean isValidEmail(String email) {
         return email != null && email.contains("@") && email.contains(".");
     }

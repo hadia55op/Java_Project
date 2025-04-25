@@ -19,9 +19,10 @@ public class ProductService {
         System.out.println("service lagar skicker videra name,price,product_id,manfacturer_id,description, stock quantity");
         productRepository.insertProduct(name, price, manufacturer_id, description, stock_quantity);
     }
-    public boolean deleteProduct(int id) throws SQLException{
-        System.out.println("server skicker vidare id");
-        return productRepository.deleteProduct(id);
+
+    public Product getProductById(int productId) {
+        return productRepository.getProductById(productId);
     }
+
 
 }

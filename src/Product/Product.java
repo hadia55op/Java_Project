@@ -36,4 +36,8 @@ public class Product {
     public int getProductId() {
         return product_id;
     }
+
+    public int getStock_quantity() {
+        return stock_quantity;
+    }
 }

@@ -1,3 +1,4 @@
+package customer;
 
 public class Inlogning {
     private int id;

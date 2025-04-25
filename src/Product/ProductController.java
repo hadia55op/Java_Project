@@ -1,5 +1,15 @@
 package Product;
 import java.util.InputMismatchException;
+import customer.CustomerController;
+import review.ReviewController;
+import review.ReviewRepository;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,9 +19,6 @@ public class ProductController {
     ProductService productService = new ProductService();
     ProductRepository productRepository = new ProductRepository();
 
-
-
-
     public void runMenu2() throws SQLException {
         Scanner scanner = new Scanner(System.in);
 
@@ -20,9 +27,9 @@ public class ProductController {
         System.out.println("3. Hämta en produk efter category_id");
         System.out.println("4. Updatera pricet på en viss  product");
         System.out.println("5. Updatera  lagar saldo av en viss product");
-
         System.out.println("6.lägga till ny product");
-        System.out.println(("7. Delete a product "));
+        System.out.println("7. filter product efter price");
+
         String select = scanner.nextLine();
         switch (select) {
             case "1":
@@ -130,12 +137,42 @@ public class ProductController {
                 } catch (NumberFormatException e) {
                     System.out.println(" Vänligen ange giltiga numeriska värden för pris, ID och lager.");
                 }
+            case "7":
+
+                try {
+                    System.out.print("Ange lägsta pris: ");
+                    double minPrice = Double.parseDouble(scanner.nextLine());
+
+                    System.out.print("Ange högsta pris: ");
+                    double maxPrice = Double.parseDouble(scanner.nextLine());
+
+                    List<Product> allProducts = productService.getAllProducts();
+
+                    List<Product> filtered = allProducts.stream()
+                            .filter(P -> P.getPrice() >= minPrice && P.getPrice() <= maxPrice)
+                            .collect(Collectors.toList());
+
+                    if (filtered.isEmpty()) {
+                        System.out.println("Inga produkter hittades inom det angivna prisintervallet.");
+                    } else {
+                        System.out.println("\nProdukter inom prisintervallet " + minPrice + " - " + maxPrice + " kr:");
+                        for (Product P : filtered) {
+                            System.out.println("- " + P.getName() + " | Pris: " + P.getPrice() + " kr | I lager: " + P.getStock_quantity());
+                        }
+                    }
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Vänligen ange giltiga numeriska värden för priset.");
+                } catch (SQLException e) {
+                    System.out.println("Fel vid hämtning av produkter: " + e.getMessage());
+                }
                 break;
 
-            case "7":
-                System.out.print("Ange ID på produkten som ska tas bort: ");
-                int product_id = Integer.parseInt(scanner.nextLine());
-                boolean deleteSucess = productRepository.deleteProduct(product_id);
+
+
+
+
+
 
         }
 

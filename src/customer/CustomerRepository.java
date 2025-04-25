@@ -1,7 +1,6 @@
-
+package customer;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class CustomerRepository {
 
@@ -32,7 +31,7 @@ public class CustomerRepository {
 
 
 
-    //#########
+    //#####################################################################################
     public void insertCustomer(String name,String email, String phone,String address,String password)throws SQLException{
         String sql = "INSERT INTO customers(name,email, phone, address,password)VALUES(?,?,?,?,?)";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -46,6 +45,7 @@ public class CustomerRepository {
         }
     }
 
+//##########################################################################3
 public boolean updateCustomer(int customerId, String email) throws SQLException {
     String checkCustomerSql = "SELECT 1 FROM customers WHERE customer_id = ?";
     String updateSql = "UPDATE customers SET email = ? WHERE customer_id = ?";
